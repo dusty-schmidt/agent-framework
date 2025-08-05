@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # [GOB] :: Config
-API_KEY="***REMOVED***"
+API_KEY="${GEMINI_API_KEY}"
 MODEL_ENDPOINT="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 LOG_FILE="/root/gemini_pinger.log"
 TMP_REQ="/root/gemini_request.json"
