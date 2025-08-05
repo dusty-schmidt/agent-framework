@@ -15,8 +15,9 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 
 # Import unified memory system
-from ...unified_memory import UnifiedMemoryHub, UnifiedMemoryItem, MemoryType
-from ...unified_memory.storage import HybridMemoryStorage
+from unified_memory.memory_interface import UnifiedMemoryItem, MemoryType
+from unified_memory.storage.hybrid_storage import HybridMemoryStorage
+from unified_memory.memory_hub import UnifiedMemoryHub
 
 # Import central nervous system components
 from .system_prompt_manager import SystemPromptManager
@@ -127,11 +128,10 @@ class CentralBrain:
             self.connected_tiers[tier_name]["request_count"] += 1
         
         # Build comprehensive context
-        context = await self.context_builder.build_unified_context(
-            tier_name=tier_name,
-            user_message=user_message,
+        context = self.context_builder.build_context(
+            request=user_message,
             session_id=session_id,
-            context_override=context_override
+            tier_name=tier_name
         )
         
         # Log the interaction for system learning

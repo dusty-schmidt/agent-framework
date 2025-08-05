@@ -9,10 +9,14 @@ import asyncio
 from pathlib import Path
 import sys
 
-# Add the parent directories to path for imports
-sys.path.append(str(Path(__file__).parent.parent.parent))
+# Standardized environment setup
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from setup_environment import setup_project_environment
 
-from central_nervous_system import CentralBrain, get_central_brain
+# Initialize environment
+setup_project_environment()
+
+from central_nervous_system.core.central_brain import CentralBrain
 
 
 class ExampleTierAgent:
@@ -24,15 +28,15 @@ class ExampleTierAgent:
     
     def __init__(self, tier_name: str):
         self.tier_name = tier_name
-        self.central_brain = get_central_brain()
-        
+        self.central_brain = CentralBrain()
+
         # Register this tier with the Central Brain
         self.central_brain.register_tier(tier_name, {
             "agent_type": "example",
             "version": "1.0.0",
             "capabilities": ["chat", "memory", "tools"]
         })
-        
+
         print(f"✅ {tier_name} tier connected to Central Brain")
     
     async def process_message(self, user_message: str, session_id: str = "default") -> str:

@@ -4,36 +4,36 @@
 system:
   name: "Agentic Framework Central Nervous System"
   version: "1.0.0"
-  environment: "development"  # development, staging, production
-  
+  environment: "development" # development, staging, production
+
 # Memory System Configuration
 memory:
   storage:
-    backend: "hybrid"  # hybrid, json, sqlite, faiss
+    backend: "hybrid" # hybrid, json, sqlite, faiss
     base_path: "./central_nervous_system_data/memory"
     max_items: 50000
     cleanup_interval_hours: 24
-    
+
   embedding:
     model: "all-MiniLM-L6-v2"
     dimensions: 384
     batch_size: 32
     cache_embeddings: true
-    
+
   retention:
     default_policy: "auto_expire"
     policies:
-      permanent: -1  # Never expire
-      session: 0     # Expire at session end
-      temporary: 24  # Hours
-      auto_expire: 720  # Hours (30 days)
-    
+      permanent: -1 # Never expire
+      session: 0 # Expire at session end
+      temporary: 24 # Hours
+      auto_expire: 720 # Hours (30 days)
+
   search:
     semantic_threshold: 0.7
     max_results: 50
     enable_hybrid_search: true
 
-# Knowledge System Configuration  
+# Knowledge System Configuration
 knowledge:
   base_path: "./central_nervous_system_data/knowledge"
   sources:
@@ -42,13 +42,13 @@ knowledge:
       watch_changes: true
     - type: "web_scraping"
       enabled: false
-      rate_limit: 10  # requests per minute
-  
+      rate_limit: 10 # requests per minute
+
   indexing:
     chunk_size: 1000
     overlap: 200
     update_interval_hours: 6
-    
+
   retrieval:
     max_chunks: 5
     relevance_threshold: 0.75
@@ -59,11 +59,11 @@ tools:
   auto_discovery: true
   categories:
     - "web_search"
-    - "file_operations" 
+    - "file_operations"
     - "calculations"
     - "code_execution"
     - "image_processing"
-  
+
   security:
     enable_sandbox: true
     allowed_imports: ["os", "json", "datetime", "math", "requests"]
@@ -78,7 +78,7 @@ tiers:
     memory_types: ["conversation", "user_data"]
     tool_categories: ["calculations", "simple_queries"]
     max_context_length: 4000
-    
+
   link:
     enabled: true
     description: "Multi-persona production agent"
@@ -86,7 +86,7 @@ tiers:
     memory_types: ["conversation", "user_data", "solution"]
     tool_categories: ["web_search", "file_operations", "calculations"]
     max_context_length: 8000
-    
+
   mesh:
     enabled: true
     description: "Multi-agent coordination system"
@@ -94,7 +94,7 @@ tiers:
     memory_types: ["conversation", "fragment", "solution", "system"]
     tool_categories: ["all"]
     max_context_length: 16000
-    
+
   grid:
     enabled: true
     description: "Self-improving advanced system"
@@ -106,7 +106,7 @@ tiers:
 # System Prompt Configuration (defaults - can be overridden)
 prompts:
   base_identity: "You are an intelligent AI assistant in a multi-tier agent framework called the Agentic System."
-  
+
   core_values:
     - "Helpfulness and accuracy"
     - "Memory-driven context awareness"
@@ -114,7 +114,7 @@ prompts:
     - "Transparency about capabilities"
     - "User safety and privacy"
     - "Cross-session consistency"
-  
+
   dynamic_context:
     include_timestamp: true
     include_session_info: true
@@ -122,26 +122,43 @@ prompts:
     include_memory_context: true
     include_tool_context: true
     include_knowledge_context: true
-    
+
     memory_context_limit: 5
-    tool_context_limit: 10  
+    tool_context_limit: 10
     knowledge_context_limit: 3
 
 # Logging Configuration
 logging:
-  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  level: "INFO" # DEBUG, INFO, WARNING, ERROR
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  
+
   files:
     central_brain: "./logs/central_brain.log"
     memory_system: "./logs/memory_system.log"
     knowledge_system: "./logs/knowledge_system.log"
     tool_system: "./logs/tool_system.log"
     interactions: "./logs/interactions.log"
-  
+
   rotation:
     max_size_mb: 10
     backup_count: 5
+
+# Model Configuration
+models:
+  default_provider: "openrouter"
+  openrouter:
+    base_url: "https://openrouter.ai/api/v1"
+    default_model: "openai/gpt-oss-20b"
+    max_tokens: 1000
+    temperature: 0.7
+    timeout: 30
+
+  # Model assignments by tier
+  tier_models:
+    node: "openai/gpt-oss-20b"
+    link: "openai/gpt-oss-20b"
+    mesh: "openai/gpt-oss-20b"
+    grid: "openai/gpt-oss-20b"
 
 # API Configuration (for tier communication)
 api:
@@ -151,9 +168,9 @@ api:
   rate_limiting:
     requests_per_minute: 1000
     burst_size: 100
-  
+
   authentication:
-    enabled: false  # Set to true in production
+    enabled: false # Set to true in production
     api_key_header: "X-API-Key"
 
 # Performance Configuration
@@ -161,11 +178,11 @@ performance:
   cache_size_mb: 512
   max_concurrent_requests: 50
   request_timeout_seconds: 30
-  
+
   memory_optimization:
-    garbage_collection_interval: 300  # seconds
-    cache_cleanup_interval: 900       # seconds
-    
+    garbage_collection_interval: 300 # seconds
+    cache_cleanup_interval: 900 # seconds
+
   monitoring:
     metrics_enabled: true
-    health_check_interval: 60  # seconds
+    health_check_interval: 60 # seconds

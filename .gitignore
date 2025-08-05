@@ -47,6 +47,9 @@ ENV/
 .env.test.local
 .env.production.local
 
+# Keep the example file
+!.env.example
+
 # API Keys and Secrets (additional protection)
 *api_key*
 *API_KEY*

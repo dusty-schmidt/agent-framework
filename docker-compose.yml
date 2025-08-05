@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  agentic-framework:
+    build: .
+    container_name: agentic-framework
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-openai/gpt-oss-20b}
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENVIRONMENT=docker
+    volumes:
+      # Mount data and logs for persistence
+      - ./data:/app/data
+      - ./logs:/app/logs
+      # Mount .env file if it exists (for development)
+      - ./.env:/app/.env:ro
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "from simple_env import setup_simple_env; setup_simple_env(); print('OK')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add Redis for caching (uncomment if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: agentic-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+
+  # Optional: Add PostgreSQL for persistent storage (uncomment if needed)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: agentic-postgres
+  #   environment:
+  #     - POSTGRES_DB=agentic_db
+  #     - POSTGRES_USER=agentic_user
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agentic_pass}
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+# volumes:
+#   redis_data:
+#   postgres_data:

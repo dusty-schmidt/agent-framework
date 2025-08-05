@@ -10,18 +10,18 @@ from .memory_interface import (
     UnifiedMemoryItem,
     MemoryType,
     RetentionPolicy,
-    MemoryQueryFilter
+    MemoryQueryFilter,
+    MemorySearchResult
 )
-# from .memory_hub import UnifiedMemoryHub  # TODO: Implement memory hub
-# from .context_manager import UnifiedContextManager  # TODO: Implement context manager
+from .memory_hub import UnifiedMemoryHub
 
 __version__ = "1.0.0"
 __all__ = [
     "IUnifiedMemoryProvider",
-    "UnifiedMemoryItem", 
+    "UnifiedMemoryItem",
     "MemoryType",
     "RetentionPolicy",
-    "MemoryQueryFilter"
-    # "UnifiedMemoryHub",  # TODO: Implement
-    # "UnifiedContextManager"  # TODO: Implement
+    "MemoryQueryFilter",
+    "MemorySearchResult",
+    "UnifiedMemoryHub"
 ]

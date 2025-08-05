@@ -5,7 +5,7 @@ url = "https://openrouter.ai/api/v1/chat"
 provider = "OpenRouter"
 
   [[endpoint.model]]
-  name = "GPT-4o"
+  name = "openai/gpt-oss-20b"
   version = "2024-07"
   context_window = 128000
   input_limit = 32768

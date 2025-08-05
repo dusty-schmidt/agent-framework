@@ -16,7 +16,12 @@ __version__ = "1.0.0"
 __all__ = [
     "CentralBrain",
     "SystemPromptManager",
-    "UnifiedContextBuilder", 
+    "UnifiedContextBuilder",
     "KnowledgeManager",
     "ToolManager"
 ]
+
+# Convenience function for getting a central brain instance
+def get_central_brain():
+    """Get a Central Brain instance with default configuration."""
+    return CentralBrain()

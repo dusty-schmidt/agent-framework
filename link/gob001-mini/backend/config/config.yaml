@@ -10,34 +10,34 @@ api:
 
 # Model Configuration
 models:
-  # Model tiers for different use cases - All using Google AI Studio for testing
+  # Model tiers for different use cases - All using OpenRouter for testing
   tiers:
-    utility: "gemini-2.0-flash-lite"
-    chat: "gemini-2.0-flash-lite"
-    premium: "gemini-2.0-flash-lite"
-    specialized: "gemini-2.0-flash-lite"
+    utility: "openai/gpt-oss-20b"
+    chat: "openai/gpt-oss-20b"
+    premium: "openai/gpt-oss-20b"
+    specialized: "openai/gpt-oss-20b"
 
   # Main agent (primary orchestrator)
   main:
-    model: "gemini-2.0-flash-lite"
+    model: "openai/gpt-oss-20b"
     temperature: 0.7
     max_tokens: 1500
 
   # Persona-specific models
   personas:
     developer:
-      model: "gemini-2.0-flash-lite"
+      model: "openai/gpt-oss-20b"
       temperature: 0.2 # Lower temperature for precise code generation
       max_tokens: 2000
     creative:
-      model: "gemini-2.0-flash-lite"
+      model: "openai/gpt-oss-20b"
       temperature: 0.8 # Higher temperature for creative tasks
       max_tokens: 1500
 
   # Universal agents available to all personas
   universal:
     utility:
-      model: "gemini-2.0-flash-lite"
+      model: "openai/gpt-oss-20b"
       temperature: 0.5
       max_tokens: 1000
     web_browser:
