@@ -47,6 +47,18 @@ ENV/
 .env.test.local
 .env.production.local
 
+# API Keys and Secrets (additional protection)
+*api_key*
+*API_KEY*
+*secret*
+*SECRET*
+*token*
+*TOKEN*
+*.key
+*.pem
+*.p12
+*.pfx
+
 # Node.js
 node_modules/
 npm-debug.log*
