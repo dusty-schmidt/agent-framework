@@ -1,0 +1,110 @@
+# Production Environment Configuration
+# Location: backend/config/environments/production.yaml
+
+# API Configuration for Production
+api:
+  openrouter_base_url: "https://openrouter.ai/api/v1"
+  google_ai_studio_base_url: "https://generativelanguage.googleapis.com/v1beta"
+  default_max_tokens: 1000
+  default_temperature: 0.7
+
+# Production Model Configuration - Optimized for performance and cost
+models:
+  # Production model tiers
+  tiers:
+    utility: "gemini-2.0-flash-lite"
+    chat: "openrouter/horizon-beta"
+    premium: "openai/gpt-4"
+    specialized: "openrouter/horizon-beta"
+
+  # Main agent (primary orchestrator)
+  main:
+    model: "openrouter/horizon-beta"
+    temperature: 0.7
+    max_tokens: 1500
+
+  # Persona-specific models
+  personas:
+    developer:
+      model: "openrouter/horizon-beta"
+      temperature: 0.2
+      max_tokens: 2000
+    creative:
+      model: "openrouter/horizon-beta"
+      temperature: 0.8
+      max_tokens: 1500
+
+  # Universal agents
+  universal:
+    utility:
+      model: "gemini-2.0-flash-lite"
+      temperature: 0.5
+      max_tokens: 1000
+    web_browser:
+      model: "openrouter/horizon-beta"
+      temperature: 0.3
+      max_tokens: 1500
+    embedding:
+      model: "text-embedding-ada-002"
+
+  # Fallback models (free alternatives)
+  fallbacks:
+    main_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.7
+      max_tokens: 1500
+    utility_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.5
+      max_tokens: 1000
+    developer_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.2
+      max_tokens: 2000
+    creative_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.8
+      max_tokens: 1500
+
+# Agent Configuration
+agents:
+  orchestrator:
+    temperature: 0.3
+    max_tokens: 500
+    routing_confidence_threshold: 0.3
+
+  coding_assistant:
+    temperature: 0.2
+    max_tokens: 2000
+
+  general_assistant:
+    temperature: 0.7
+    max_tokens: 1000
+
+  top_level:
+    persona_selection_threshold: 0.3
+    routing_confidence_threshold: 0.4
+
+  personas:
+    developer:
+      available_helpers: ["coding_assistant", "web_browser"]
+      helper_threshold: 0.5
+    creative:
+      available_helpers: ["general_assistant"]
+      helper_threshold: 0.6
+
+  fallback:
+    enabled: true
+    max_retries: 2
+    retry_delay: 1.0
+    fallback_notification: false  # Don't notify users in production
+
+# Production System Configuration
+system:
+  max_conversation_history: 50
+  max_session_memory: 50
+  log_level: "INFO"  # Less verbose logging for production
+  log_agent_routing: false
+  log_model_usage: true
+  enable_streaming: true
+  concurrent_requests: 50

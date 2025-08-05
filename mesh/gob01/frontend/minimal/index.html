@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>WS Minimal Client</title>
+  <style>body{font-family:system-ui, sans-serif; margin:20px;} #log{white-space:pre-wrap; background:#111; color:#0f0; padding:10px; height:300px; overflow:auto;}</style>
+</head>
+<body>
+  <h1>WS Minimal Client</h1>
+  <div>
+    <button id="run">Trigger agents/run</button>
+  </div>
+  <div id="log"></div>
+  <script>
+    const log = (m)=>{ const el=document.getElementById('log'); el.textContent += m + '\n'; el.scrollTop = el.scrollHeight; };
+    const ws = new WebSocket('ws://localhost:8080/ws/stream');
+    ws.onopen = ()=> log('[GOB] :: WS connected');
+    ws.onmessage = (e)=> log('[WS] ' + e.data);
+    ws.onerror = (e)=> log('[WS ERROR] ' + e.message);
+    document.getElementById('run').onclick = async ()=>{
+      await fetch('http://localhost:8080/agents/run', {method:'POST', headers:{'Content-Type':'application/json','x-correlation-id':'min-ui'}, body: JSON.stringify({instruction:'frontend smoke'})});
+    };
+  </script>
+</body>
+</html>

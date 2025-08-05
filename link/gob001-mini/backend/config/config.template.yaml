@@ -1,0 +1,114 @@
+# gob-001-mini - Configuration Template
+# Copy this file as 'config.yaml' in this directory and customize as needed
+
+# API Configuration
+api:
+  openrouter_base_url: "https://openrouter.ai/api/v1"
+  default_max_tokens: 1000
+  default_temperature: 0.7
+
+# Model Configuration
+models:
+  # Model tiers for different use cases
+  tiers:
+    utility: "openai/gpt-3.5-turbo"
+    chat: "openai/gpt-4"
+    premium: "openai/gpt-4-turbo"
+    specialized: "openai/gpt-4"
+
+  # Main agent (primary orchestrator)
+  main:
+    model: "openai/gpt-4"
+    temperature: 0.7
+    max_tokens: 1500
+
+  # Persona-specific models
+  personas:
+    developer:
+      model: "openai/gpt-4"
+      temperature: 0.2 # Lower temperature for precise code generation
+      max_tokens: 2000
+    creative:
+      model: "openai/gpt-4"
+      temperature: 0.8 # Higher temperature for creative tasks
+      max_tokens: 1500
+
+  # Universal agents available to all personas
+  universal:
+    utility:
+      model: "openai/gpt-3.5-turbo"
+      temperature: 0.5
+      max_tokens: 1000
+    web_browser:
+      model: "openai/gpt-4"
+      temperature: 0.3
+      max_tokens: 1500
+    embedding:
+      model: "text-embedding-ada-002"
+
+  # Fallback models (free alternatives when API credits are exhausted)
+  fallbacks:
+    main_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.7
+      max_tokens: 1500
+    utility_fallback:
+      model: "meta-llama/llama-3.2-1b-instruct:free"
+      temperature: 0.5
+      max_tokens: 1000
+    developer_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.2
+      max_tokens: 2000
+    creative_fallback:
+      model: "meta-llama/llama-3.2-3b-instruct:free"
+      temperature: 0.8
+      max_tokens: 1500
+
+# Agent Configuration
+agents:
+  # Main orchestrator agent
+  orchestrator:
+    temperature: 0.3
+    max_tokens: 500
+    routing_confidence_threshold: 0.3
+
+  # Specialized agents
+  coding_assistant:
+    temperature: 0.2
+    max_tokens: 2000
+
+  general_assistant:
+    temperature: 0.7
+    max_tokens: 1000
+
+  # Top-level routing configuration
+  top_level:
+    persona_selection_threshold: 0.3
+    routing_confidence_threshold: 0.4
+
+  # Persona configurations
+  personas:
+    developer:
+      available_helpers: ["coding_assistant", "web_browser"]
+      helper_threshold: 0.5
+    creative:
+      available_helpers: ["general_assistant"]
+      helper_threshold: 0.6
+
+  # Fallback system configuration
+  fallback:
+    enabled: true
+    max_retries: 2
+    retry_delay: 1.0
+    fallback_notification: true
+
+# System Configuration
+system:
+  max_conversation_history: 20
+  max_session_memory: 20
+  log_level: "INFO" # DEBUG, INFO, WARNING, ERROR
+  log_agent_routing: true
+  log_model_usage: true
+  enable_streaming: false
+  concurrent_requests: 10

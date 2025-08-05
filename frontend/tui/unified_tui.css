@@ -1,0 +1,81 @@
+/* Simple TUI CSS Styles */
+
+.title {
+    text-align: center;
+    text-style: bold;
+    color: $accent;
+    margin: 1;
+}
+
+.section-title {
+    text-style: bold;
+    color: $primary;
+    margin: 1 0;
+}
+
+.status-section {
+    border: solid $primary;
+    margin: 1;
+    padding: 1;
+    height: auto;
+}
+
+.controls-section {
+    border: solid $secondary;
+    margin: 1;
+    padding: 1;
+    height: auto;
+}
+
+.logs-section {
+    border: solid $accent;
+    margin: 1;
+    padding: 1;
+    height: 1fr;
+}
+
+.logs-panel {
+    height: 1fr;
+    scrollbar-size-vertical: 1;
+    border: none;
+}
+
+/* Button styling */
+Button {
+    margin: 0 1;
+    min-width: 12;
+    height: 3;
+}
+
+Button.success {
+    background: $success;
+}
+
+Button.error {
+    background: $error;
+}
+
+/* Layout containers */
+Vertical {
+    height: 100%;
+}
+
+Horizontal {
+    height: auto;
+    align: center middle;
+}
+
+/* Header and footer */
+Header {
+    dock: top;
+}
+
+Footer {
+    dock: bottom;
+}
+
+/* Container spacing */
+Container {
+    margin: 0;
+    padding: 0;
+}

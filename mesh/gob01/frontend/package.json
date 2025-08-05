@@ -1,0 +1,10 @@
+{
+  "name": "modular-ai-frontend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Start your dev server here (Phase 2)'",
+    "build": "echo 'Build placeholder'",
+    "test": "echo 'Run frontend tests'"
+  }
+}

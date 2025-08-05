@@ -1,0 +1,12 @@
+# Documentation Index
+- Project Overview: ../README.md
+- Backend: ../backend/README.md
+- Frontend: ../frontend/README.md
+- Foundations:
+  - Memory: foundations/memory.md
+  - Scheduler: foundations/scheduler.md
+  - Behavior: foundations/behavior.md
+  - Tools & Helpers: foundations/tools_and_helpers.md
+  - UI Agents: foundations/ui_agents.md
+- API: api/openapi.yaml
+- Events: events.md

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/event_envelope.schema.json",
+  "type": "object",
+  "required": ["id", "ts", "type", "source", "correlation_id", "seq", "payload"],
+  "properties": {
+    "id": {"type": "string"},
+    "ts": {"type": "string", "format": "date-time"},
+    "type": {"type": "string"},
+    "source": {"type": "string"},
+    "correlation_id": {"type": "string"},
+    "seq": {"type": "integer", "minimum": 0},
+    "payload": {"type": "object"}
+  }
+}
