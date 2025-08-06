@@ -1,8 +1,0 @@
-# Requirements for Unified TUI Manager
-textual>=0.41.0
-rich>=13.0.0
-typing-extensions>=4.0.0
-
-# These may already be installed for your existing agents
-requests>=2.28.0
-pydantic>=2.0.0

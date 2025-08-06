@@ -1,0 +1,15 @@
+name: agentic-framework
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - aiohttp
+    - textual
+    - rich
+    - toml
+    - pydantic
+    - numpy
+    - faiss-cpu

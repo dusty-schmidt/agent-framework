@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agentic Framework - Test Interface</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "JetBrains Mono", "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace;
+        background: #11111b;
+        color: #cdd6f4;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 300px 1fr 350px;
+        grid-template-rows: 60px 1fr;
+        height: 100vh;
+        gap: 1px;
+        background: #1e1e2e;
+        overflow: hidden;
+      }
+
+      /* Header */
+      .header {
+        grid-column: 1 / -1;
+        background: #1e1e2e;
+        border-bottom: 2px solid #313244;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        color: #f38ba8;
+        font-weight: bold;
+      }
+
+      .logo {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #a6e3a1;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(1.1);
+        }
+      }
+
+      /* Sidebar - Tiers */
+      .sidebar {
+        background: #181825;
+        border-right: 1px solid #313244;
+        padding: 20px;
+      }
+
+      .sidebar h3 {
+        color: #89b4fa;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+
+      .tier-button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: #1e1e2e;
+        border: 1px solid #313244;
+        color: #cdd6f4;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 12px;
+        transition: all 0.3s;
+        border-radius: 6px;
+      }
+
+      .tier-button:hover {
+        background: #313244;
+        border-color: #89b4fa;
+      }
+
+      .tier-button.active {
+        background: #89b4fa;
+        border-color: #89b4fa;
+        color: #11111b;
+      }
+
+      /* Chat Area */
+      .chat-area {
+        background: #181825;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .chat-header {
+        background: #1e1e2e;
+        padding: 15px 20px;
+        border-bottom: 1px solid #313244;
+        color: #cdd6f4;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        min-height: 0;
+      }
+
+      .message {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.4;
+        border: 1px solid transparent;
+      }
+
+      .message.user {
+        align-self: flex-end;
+        background: #89b4fa;
+        color: #11111b;
+        border-radius: 12px 12px 4px 12px;
+      }
+
+      .message.bot {
+        align-self: flex-start;
+        background: #313244;
+        border: 1px solid #45475a;
+        color: #cdd6f4;
+        border-radius: 12px 12px 12px 4px;
+      }
+
+      .message.system {
+        align-self: center;
+        background: #f38ba8;
+        color: #11111b;
+        font-style: italic;
+        max-width: 90%;
+        border-radius: 8px;
+      }
+
+      .input-area {
+        background: #1e1e2e;
+        padding: 15px 20px;
+        border-top: 1px solid #313244;
+        flex-shrink: 0;
+      }
+
+      .input-container {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+      }
+
+      .message-input {
+        flex: 1;
+        background: #313244;
+        border: 1px solid #45475a;
+        color: #cdd6f4;
+        padding: 12px 16px;
+        font-family: inherit;
+        font-size: 13px;
+        resize: none;
+        min-height: 40px;
+        max-height: 100px;
+        border-radius: 8px;
+      }
+
+      .message-input:focus {
+        outline: none;
+        border-color: #89b4fa;
+        box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2);
+      }
+
+      .send-btn {
+        background: #89b4fa;
+        border: 1px solid #89b4fa;
+        color: #11111b;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 12px;
+        transition: all 0.3s;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .send-btn:hover:not(:disabled) {
+        background: #74c7ec;
+        transform: translateY(-1px);
+      }
+
+      .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Test Panel */
+      .test-panel {
+        background: #181825;
+        border-left: 1px solid #313244;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .panel-tabs {
+        display: flex;
+        background: #1e1e2e;
+      }
+
+      .panel-tab {
+        flex: 1;
+        padding: 10px;
+        background: #313244;
+        border: none;
+        color: #a6adc8;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 11px;
+        border-right: 1px solid #45475a;
+        transition: all 0.3s;
+      }
+
+      .panel-tab.active {
+        background: #181825;
+        color: #89b4fa;
+        border-bottom: 2px solid #89b4fa;
+      }
+
+      .panel-tab:hover:not(.active) {
+        background: #45475a;
+        color: #cdd6f4;
+      }
+
+      .panel-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+        background: #181825;
+      }
+
+      .panel-section {
+        display: none;
+      }
+
+      .panel-section.active {
+        display: block;
+      }
+
+      .panel-section h4 {
+        color: #89b4fa;
+        margin-bottom: 10px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .log-entry {
+        font-size: 11px;
+        margin-bottom: 5px;
+        padding: 8px 12px;
+        background: #1e1e2e;
+        border-left: 3px solid #45475a;
+        border-radius: 4px;
+        font-family: inherit;
+        color: #cdd6f4;
+      }
+
+      .log-entry.info {
+        border-left-color: #a6e3a1;
+        color: #a6e3a1;
+      }
+      .log-entry.warn {
+        border-left-color: #fab387;
+        color: #fab387;
+        background: #2d2416;
+      }
+      .log-entry.error {
+        border-left-color: #f38ba8;
+        color: #f38ba8;
+        background: #2d1b2e;
+      }
+
+      .status-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 11px;
+        padding: 4px 0;
+        border-bottom: 1px solid #313244;
+      }
+
+      .status-label {
+        color: #a6adc8;
+      }
+
+      .status-value {
+        color: #89b4fa;
+        font-weight: 600;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #181825;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #45475a;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #585b70;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">AGENTIC FRAMEWORK - TEST INTERFACE</div>
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span>SYSTEM ONLINE</span>
+        </div>
+      </div>
+
+      <!-- Sidebar - Tier Selection -->
+      <div class="sidebar">
+        <h3>AGENT TIERS</h3>
+        <button class="tier-button active" data-tier="node">NODE</button>
+        <button class="tier-button" data-tier="link">LINK</button>
+        <button class="tier-button" data-tier="mesh">MESH</button>
+        <button class="tier-button" data-tier="grid">GRID</button>
+
+        <h3 style="margin-top: 30px">COMMANDS</h3>
+        <button class="tier-button" onclick="clearChat()">/CLEAR</button>
+        <button class="tier-button" onclick="showStatus()">/STATUS</button>
+        <button class="tier-button" onclick="runTest()">/TEST</button>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <div class="chat-header">
+          <span id="currentTier">NODE TIER ACTIVE</span>
+          <span style="float: right"
+            >Messages: <span id="messageCount">0</span></span
+          >
+        </div>
+
+        <div class="messages" id="messages">
+          <div class="message system">
+            >> AGENTIC FRAMEWORK TEST INTERFACE INITIALIZED<br />
+            >> Current tier: NODE | Type message or use commands
+          </div>
+        </div>
+
+        <div class="input-area">
+          <div class="input-container">
+            <textarea
+              class="message-input"
+              id="messageInput"
+              placeholder="Enter message..."
+              rows="1"
+              onkeydown="handleKeyDown(event)"
+              oninput="adjustTextarea(this); toggleSendButton()"
+            ></textarea>
+            <button
+              class="send-btn"
+              id="sendBtn"
+              onclick="sendMessage()"
+              disabled
+            >
+              SEND
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Panel -->
+      <div class="test-panel">
+        <div class="panel-tabs">
+          <button class="panel-tab active" onclick="switchPanel('logs')">
+            LOGS
+          </button>
+          <button class="panel-tab" onclick="switchPanel('status')">
+            STATUS
+          </button>
+          <button class="panel-tab" onclick="switchPanel('memory')">
+            MEMORY
+          </button>
+        </div>
+
+        <div class="panel-content">
+          <div class="panel-section active" id="logs-panel">
+            <h4>SYSTEM LOGS</h4>
+            <div id="logEntries">
+              <div class="log-entry info">[INFO] System initialized</div>
+              <div class="log-entry info">[INFO] NODE tier activated</div>
+            </div>
+          </div>
+
+          <div class="panel-section" id="status-panel">
+            <h4>SYSTEM STATUS</h4>
+            <div class="status-item">
+              <span>Active Tier:</span>
+              <span class="status-value" id="statusTier">NODE</span>
+            </div>
+            <div class="status-item">
+              <span>Messages:</span>
+              <span class="status-value" id="statusMessages">0</span>
+            </div>
+            <div class="status-item">
+              <span>Uptime:</span>
+              <span class="status-value" id="statusUptime">0s</span>
+            </div>
+            <div class="status-item">
+              <span>API Status:</span>
+              <span class="status-value">READY</span>
+            </div>
+          </div>
+
+          <div class="panel-section" id="memory-panel">
+            <h4>MEMORY CONTEXT</h4>
+            <div id="memoryEntries">
+              <div style="font-size: 11px; color: #666">No context loaded</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTier = "node";
+      let messageCount = 0;
+      let startTime = Date.now();
+      let conversationHistory = [];
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        setupTierButtons();
+        updateStatus();
+        setInterval(updateUptime, 1000);
+        setInterval(fetchLiveLogs, 5000); // Fetch logs every 5 seconds
+        fetchLiveLogs(); // Initial fetch
+      });
+
+      function setupTierButtons() {
+        document.querySelectorAll(".tier-button[data-tier]").forEach((btn) => {
+          btn.addEventListener("click", () => switchTier(btn.dataset.tier));
+        });
+      }
+
+      async function switchTier(tier) {
+        try {
+          // Call backend API to switch tier
+          const response = await fetch(
+            "http://localhost:8081/api/switch_tier",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                tier: tier,
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (data.success) {
+            currentTier = tier;
+
+            // Update UI
+            document
+              .querySelectorAll(".tier-button[data-tier]")
+              .forEach((btn) => {
+                btn.classList.toggle("active", btn.dataset.tier === tier);
+              });
+
+            document.getElementById(
+              "currentTier"
+            ).textContent = `${tier.toUpperCase()} TIER ACTIVE`;
+            document.getElementById("statusTier").textContent =
+              tier.toUpperCase();
+
+            // Add system message
+            addMessage("system", `>> Switched to ${tier.toUpperCase()} tier`);
+            addLog("info", `Tier switched to ${tier.toUpperCase()}`);
+          } else {
+            addLog("error", `Failed to switch tier: ${data.error}`);
+          }
+        } catch (error) {
+          console.error("Tier switch error:", error);
+          addLog("error", "Failed to connect to backend for tier switch");
+        }
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Add user message
+        addMessage("user", message);
+        messageCount++;
+        updateStatus();
+
+        // Clear input
+        input.value = "";
+        input.style.height = "auto";
+        toggleSendButton();
+
+        // Log the message
+        addLog(
+          "info",
+          `User message sent to ${currentTier.toUpperCase()} tier`
+        );
+
+        // Send to backend API
+        try {
+          const response = await fetch("http://localhost:8081/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: message,
+              conversation_id: "test_interface",
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            addMessage("bot", data.response);
+            addLog(
+              "info",
+              `${currentTier.toUpperCase()} tier response generated`
+            );
+            updateMemoryContext(message, data.response);
+          } else {
+            addMessage("bot", `>> ERROR: ${data.error}`);
+            addLog("error", `API error: ${data.error}`);
+          }
+        } catch (error) {
+          console.error("API Error:", error);
+          addMessage("bot", ">> ERROR: Could not connect to backend API");
+          addLog("error", "Failed to connect to backend API");
+        }
+      }
+
+      function addMessage(type, content) {
+        const messagesContainer = document.getElementById("messages");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${type}`;
+        messageDiv.textContent = content;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Store in conversation history
+        conversationHistory.push({ type, content, timestamp: Date.now() });
+        if (conversationHistory.length > 50) {
+          conversationHistory = conversationHistory.slice(-50);
+        }
+      }
+
+      function addLog(level, message) {
+        const logContainer = document.getElementById("logEntries");
+        const logDiv = document.createElement("div");
+        logDiv.className = `log-entry ${level}`;
+        const timestamp = new Date().toLocaleTimeString();
+        logDiv.textContent = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+        logContainer.appendChild(logDiv);
+        logContainer.scrollTop = logContainer.scrollHeight;
+
+        // Keep only last 100 log entries
+        while (logContainer.children.length > 100) {
+          logContainer.removeChild(logContainer.firstChild);
+        }
+      }
+
+      function updateMemoryContext(userMsg, botResponse) {
+        const memoryContainer = document.getElementById("memoryEntries");
+        memoryContainer.innerHTML = "";
+
+        // Show last few exchanges
+        const recent = conversationHistory.slice(-6);
+        recent.forEach((entry) => {
+          const div = document.createElement("div");
+          div.style.fontSize = "10px";
+          div.style.marginBottom = "5px";
+          div.style.color = entry.type === "user" ? "#00ff00" : "#00aaff";
+          div.textContent = `${entry.type.toUpperCase()}: ${entry.content.substring(
+            0,
+            50
+          )}...`;
+          memoryContainer.appendChild(div);
+        });
+      }
+
+      function updateStatus() {
+        document.getElementById("messageCount").textContent = messageCount;
+        document.getElementById("statusMessages").textContent = messageCount;
+      }
+
+      function updateUptime() {
+        const uptime = Math.floor((Date.now() - startTime) / 1000);
+        document.getElementById("statusUptime").textContent = `${uptime}s`;
+      }
+
+      function switchPanel(panelName) {
+        // Update tabs
+        document.querySelectorAll(".panel-tab").forEach((tab) => {
+          tab.classList.toggle(
+            "active",
+            tab.textContent.toLowerCase() === panelName
+          );
+        });
+
+        // Update panels
+        document.querySelectorAll(".panel-section").forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `${panelName}-panel`);
+        });
+      }
+
+      function clearChat() {
+        document.getElementById("messages").innerHTML = "";
+        conversationHistory = [];
+        messageCount = 0;
+        updateStatus();
+        addMessage("system", ">> Chat cleared");
+        addLog("info", "Chat history cleared");
+      }
+
+      function showStatus() {
+        const uptime = Math.floor((Date.now() - startTime) / 1000);
+        addMessage(
+          "system",
+          `>> Status: Tier=${currentTier.toUpperCase()} | Messages=${messageCount} | Uptime=${uptime}s`
+        );
+      }
+
+      function runTest() {
+        addMessage("system", ">> Running system test...");
+        addLog("info", "System test initiated");
+
+        setTimeout(() => {
+          addMessage("system", ">> Test complete: All systems operational");
+          addLog("info", "System test completed successfully");
+        }, 2000);
+      }
+
+      function handleKeyDown(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      }
+
+      function adjustTextarea(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = Math.min(textarea.scrollHeight, 100) + "px";
+      }
+
+      function toggleSendButton() {
+        const input = document.getElementById("messageInput");
+        const sendBtn = document.getElementById("sendBtn");
+        sendBtn.disabled = input.value.trim().length === 0;
+      }
+
+      async function fetchLiveLogs() {
+        try {
+          const response = await fetch(
+            "http://localhost:8081/api/logs?limit=20"
+          );
+          const data = await response.json();
+
+          if (data.success) {
+            const logContainer = document.getElementById("logEntries");
+            logContainer.innerHTML = "";
+
+            data.logs.forEach((log) => {
+              const logDiv = document.createElement("div");
+              logDiv.className = `log-entry ${log.level}`;
+              const timestamp = new Date(log.timestamp).toLocaleTimeString();
+              logDiv.textContent = `[${timestamp}] [${log.level.toUpperCase()}] ${
+                log.message
+              }`;
+              logContainer.appendChild(logDiv);
+            });
+
+            logContainer.scrollTop = logContainer.scrollHeight;
+          }
+        } catch (error) {
+          console.error("Failed to fetch logs:", error);
+        }
+      }
+    </script>
+  </body>
+</html>

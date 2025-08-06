@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Framework - Terminal Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow: hidden;
+        }
+
+        .terminal {
+            width: 100vw;
+            height: 100vh;
+            background: #0a0a0a;
+            border: 2px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            padding: 10px;
+            text-align: center;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .status-bar {
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 5px 15px;
+            color: #666;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #0a0a0a;
+        }
+
+        .input-area {
+            background: #111;
+            border-top: 1px solid #333;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt {
+            color: #ffff00;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        #messageInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 2px 0;
+        }
+
+        .user-message {
+            color: #00ff00;
+        }
+
+        .agent-message {
+            color: #00aaff;
+            margin-left: 20px;
+        }
+
+        .system-message {
+            color: #666;
+            font-style: italic;
+        }
+
+        .error-message {
+            color: #ff4444;
+        }
+
+        .tier-indicator {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        .thinking {
+            color: #666;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .ascii-border {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* Scrollbar styling */
+        .chat-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="header">
+            <div class="ascii-border">
+                ╭─────────────────────────────────────────────────────────────╮<br>
+                │                    AGENTIC FRAMEWORK                       │<br>
+                │                  Terminal Chat Interface                   │<br>
+                ╰─────────────────────────────────────────────────────────────╯
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <span>Tier: <span class="tier-indicator" id="currentTier">NODE</span></span>
+            <span>Messages: <span id="messageCount">0</span></span>
+            <span>Status: <span style="color: #00ff00;">READY</span></span>
+            <span id="timestamp"></span>
+        </div>
+        
+        <div class="chat-area" id="chatArea">
+            <div class="system-message">[SYSTEM] Terminal chat interface loaded</div>
+            <div class="system-message">[SYSTEM] Type /help for commands</div>
+            <div class="system-message">[SYSTEM] Current tier: NODE</div>
+            <div class="system-message">─────────────────────────────────────────────────</div>
+        </div>
+        
+        <div class="input-area">
+            <span class="prompt" id="prompt">[NODE] You:</span>
+            <input type="text" id="messageInput" placeholder="Type your message..." autocomplete="off">
+        </div>
+    </div>
+
+    <script>
+        class TerminalChat {
+            constructor() {
+                this.currentTier = 'node';
+                this.messageCount = 0;
+                this.chatArea = document.getElementById('chatArea');
+                this.messageInput = document.getElementById('messageInput');
+                this.prompt = document.getElementById('prompt');
+                this.tierIndicator = document.getElementById('currentTier');
+                this.messageCountEl = document.getElementById('messageCount');
+                
+                this.setupEventListeners();
+                this.updateTimestamp();
+                setInterval(() => this.updateTimestamp(), 1000);
+            }
+            
+            setupEventListeners() {
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
+                    }
+                });
+            }
+            
+            updateTimestamp() {
+                const now = new Date();
+                document.getElementById('timestamp').textContent = now.toLocaleTimeString();
+            }
+            
+            addMessage(content, type = 'system') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}-message`;
+                messageDiv.innerHTML = content;
+                this.chatArea.appendChild(messageDiv);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+            }
+            
+            async sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+                
+                // Clear input
+                this.messageInput.value = '';
+                
+                // Handle commands
+                if (message.startsWith('/')) {
+                    this.handleCommand(message);
+                    return;
+                }
+                
+                // Show user message
+                this.addMessage(`[${this.currentTier.toUpperCase()}] You: ${message}`, 'user');
+                
+                // Show thinking indicator
+                const thinkingDiv = document.createElement('div');
+                thinkingDiv.className = 'message thinking';
+                thinkingDiv.textContent = `[${this.currentTier.toUpperCase()}] Agent: Processing...`;
+                this.chatArea.appendChild(thinkingDiv);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+                
+                // Simulate API call (replace with actual API call)
+                setTimeout(() => {
+                    this.chatArea.removeChild(thinkingDiv);
+                    
+                    // Simulate different responses based on tier
+                    let response = this.generateMockResponse(message);
+                    this.addMessage(`[${this.currentTier.toUpperCase()}] Agent: ${response}`, 'agent');
+                    
+                    this.messageCount++;
+                    this.messageCountEl.textContent = this.messageCount;
+                }, 1000 + Math.random() * 2000);
+            }
+            
+            generateMockResponse(message) {
+                const responses = {
+                    node: [
+                        "I understand. Let me help you with that.",
+                        "That's a good question. Here's what I think...",
+                        "I can assist you with that task."
+                    ],
+                    link: [
+                        "I can help you with multiple approaches to this problem.",
+                        "Let me provide you with several options and perspectives.",
+                        "I can adapt my response style to better suit your needs."
+                    ],
+                    mesh: [
+                        "Let me coordinate the best approach for this task.",
+                        "I'll organize this systematically for optimal results.",
+                        "This requires careful planning and resource allocation."
+                    ],
+                    grid: [
+                        "Let me analyze this comprehensively and provide insights.",
+                        "I'll examine this from multiple angles and suggest improvements.",
+                        "This presents interesting optimization opportunities."
+                    ]
+                };
+                
+                const tierResponses = responses[this.currentTier];
+                return tierResponses[Math.floor(Math.random() * tierResponses.length)];
+            }
+            
+            handleCommand(command) {
+                const parts = command.slice(1).split(' ');
+                const cmd = parts[0].toLowerCase();
+                
+                switch (cmd) {
+                    case 'tier':
+                        if (parts[1]) {
+                            const newTier = parts[1].toLowerCase();
+                            if (['node', 'link', 'mesh', 'grid'].includes(newTier)) {
+                                this.currentTier = newTier;
+                                this.tierIndicator.textContent = newTier.toUpperCase();
+                                this.prompt.textContent = `[${newTier.toUpperCase()}] You:`;
+                                this.addMessage(`[SYSTEM] Switched to ${newTier} tier`, 'system');
+                            } else {
+                                this.addMessage('[ERROR] Unknown tier. Available: node, link, mesh, grid', 'error');
+                            }
+                        }
+                        break;
+                        
+                    case 'clear':
+                        this.chatArea.innerHTML = '';
+                        this.addMessage('[SYSTEM] Chat cleared', 'system');
+                        break;
+                        
+                    case 'status':
+                        this.addMessage(`[SYSTEM] Current tier: ${this.currentTier}`, 'system');
+                        this.addMessage(`[SYSTEM] Messages sent: ${this.messageCount}`, 'system');
+                        break;
+                        
+                    case 'help':
+                        this.addMessage('[HELP] Available commands:', 'system');
+                        this.addMessage('  /tier <name>  - Switch tier (node, link, mesh, grid)', 'system');
+                        this.addMessage('  /clear        - Clear chat history', 'system');
+                        this.addMessage('  /status       - Show current status', 'system');
+                        this.addMessage('  /help         - Show this help', 'system');
+                        break;
+                        
+                    default:
+                        this.addMessage(`[ERROR] Unknown command: ${cmd}`, 'error');
+                        this.addMessage('[SYSTEM] Type /help for available commands', 'system');
+                }
+            }
+        }
+        
+        // Initialize the chat interface
+        const chat = new TerminalChat();
+        
+        // Focus on input
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html>

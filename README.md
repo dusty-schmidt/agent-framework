@@ -5,8 +5,22 @@ A modular, interface-agnostic multi-tier agent system designed for progressive c
 ## 🚀 Quick Start
 
 ```bash
-# Launch the TUI Manager
-python start_tui.py
+# 1. Create conda environment
+conda env create -f environment.yml
+conda activate agentic-framework
+
+# 2. Add API key to your zsh config
+echo 'export OPENROUTER_API_KEY="your_key_here"' >> ~/.zshrc
+source ~/.zshrc
+
+# 3. Test everything works
+python tests/complete_test.py
+
+# 4. Start the framework
+python main.py                     # Web interface (primary)
+python main.py --test             # Web interface with test panels
+python main.py --terminal         # Terminal interface
+python main.py --validate         # Validate configuration only
 ```
 
 Navigate with Tab, control tiers with buttons, monitor in real-time.
@@ -29,16 +43,23 @@ The system is organized into four progressive tiers:
 ## 📁 Directory Structure
 
 ```
-agentic system/
-├── 🎨 frontend/           # User interfaces
-│   └── tui/              # Terminal User Interface
-├── 📚 docs/              # Comprehensive documentation
-├── 📊 logs/              # Centralized system logs
-├── 🔧 node/              # Node Tier (single agent)
-├── 🔗 link/              # Link Tier (multi-persona)
-├── 🕸️  mesh/              # Mesh Tier (coordination)
-├── 🌐 grid/              # Grid Tier (self-improving)
-└── 🛠️  misc/              # Utilities and tools
+agentic-framework/
+├── 📋 config.toml         # Main configuration
+├── 🧠 core/              # Framework core components
+│   ├── brain/            # Central intelligence
+│   ├── memory/           # Unified memory system
+│   ├── config/           # System configuration
+│   └── data/             # Persistent data & logs
+├── 🎯 tiers/             # Agent tier implementations
+│   ├── node/             # Node Tier (single agent)
+│   ├── link/             # Link Tier (multi-persona)
+│   ├── mesh/             # Mesh Tier (coordination)
+│   └── grid/             # Grid Tier (self-improving)
+├── 🔧 scripts/           # Utilities & setup tools
+├── 🧪 tests/             # Test suite
+├── 🎨 frontend/          # User interfaces
+├── 📚 docs/              # Documentation
+└── 🐳 docker/            # Container configuration
 ```
 
 ## ✨ Key Features
